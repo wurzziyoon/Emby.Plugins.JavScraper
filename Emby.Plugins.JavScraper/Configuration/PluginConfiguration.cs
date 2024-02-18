@@ -139,7 +139,7 @@ namespace Emby.Plugins.JavScraper.Configuration
         /// <summary>
         /// 从艺术类型中移除女优的名字
         /// </summary>
-        public bool GenreIgnoreActor { get; set; } = true;
+        public bool GenreIgnoreActor { get; set; } = false;
 
         /// <summary>
         /// 从标题结尾处移除女优的名字

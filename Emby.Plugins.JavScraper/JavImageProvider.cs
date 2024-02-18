@@ -148,7 +148,7 @@ namespace Emby.Plugins.JavScraper
                 if (index.Samples?.Any() == true)
                 {
                     foreach (var url in index.Samples.Where(o => o.IsWebUrl()))
-                        await Add(url, ImageType.Thumb);
+                        await Add(url, ImageType.Backdrop);
                 }
             }
 

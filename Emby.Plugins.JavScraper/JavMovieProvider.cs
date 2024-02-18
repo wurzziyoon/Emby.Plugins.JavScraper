@@ -117,8 +117,10 @@ namespace Emby.Plugins.JavScraper
             if (m.Genres?.Any() == true)
             {
                 m.Genres.RemoveAll(o => Plugin.Instance?.Configuration?.IsIgnoreGenre(o) == true);
+                //modify by joseph zy hu
                 if (Plugin.Instance?.Configuration?.GenreIgnoreActor == true && m.Actors?.Any() == true)
                     m.Genres.RemoveAll(o => m.Actors.Contains(o));
+                //end modify by joseph zyhu
             }
 
             //从标题结尾处移除女优的名字
@@ -212,7 +214,7 @@ namespace Emby.Plugins.JavScraper
                 OriginalTitle = m.OriginalTitle,
                 Genres = m.Genres?.ToArray() ?? new string[] { },
                 SortName = m.Num,
-                ForcedSortName = m.Num,
+                //ForcedSortName = m.Num,
                 ExternalId = m.Num
             };
 
@@ -300,7 +302,7 @@ namespace Emby.Plugins.JavScraper
             await Task.WhenAll(tasks);
             var all = tasks.Where(o => o.Result?.Any() == true).SelectMany(o => o.Result).ToList();
 
-            _logger?.Info($"{nameof(GetSearchResults)} name:{searchInfo.Name} id:{javid?.id} count:{all.Count}");
+            _logger?.Info($"{nameof(GetSearchResults)} name:{searchInfo.Name} id:{javid?.id} count:{all.Count} scrapers:{_jsonSerializer.SerializeToString(scrapers)}");
 
             if (all.Any() != true)
                 return list;

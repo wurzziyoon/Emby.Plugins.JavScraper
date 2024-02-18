@@ -1,4 +1,6 @@
 ﻿using HtmlAgilityPack;
+using LiteDB;
+
 #if __JELLYFIN__
 using Microsoft.Extensions.Logging;
 #else
@@ -7,6 +9,7 @@ using MediaBrowser.Model.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -38,7 +41,7 @@ namespace Emby.Plugins.JavScraper.Scrapers
             ILogManager logManager
 #endif
             )
-            : base("https://javdb8.com/", logManager.CreateLogger<JavDB>())
+            : base("https://javdb.com/", logManager.CreateLogger<JavDB>())
         {
         }
 
@@ -99,7 +102,7 @@ namespace Emby.Plugins.JavScraper.Scrapers
         {
             if (doc == null)
                 return ls;
-            var nodes = doc.DocumentNode.SelectNodes("//*[@id='videos']/div/div/a");
+            var nodes = doc.DocumentNode.SelectNodes("//*[@class='movie-list h cols-4 vcols-8']/div[@class='item']/a");
             if (nodes?.Any() != true)
                 return ls;
 
@@ -114,20 +117,29 @@ namespace Emby.Plugins.JavScraper.Scrapers
                 if (img != null)
                 {
                     m.Cover = img.GetAttributeValue("data-original", null);
-                    if (string.IsNullOrEmpty(m.Cover)) 
+                    if (string.IsNullOrEmpty(m.Cover))
                         m.Cover = img.GetAttributeValue("data-src", null);
-                    if (string.IsNullOrEmpty(m.Cover)) 
+                    if (string.IsNullOrEmpty(m.Cover))
                         m.Cover = img.GetAttributeValue("src", null);
                     if (m.Cover?.StartsWith("//") == true)
                         m.Cover = $"https:{m.Cover}";
+
                 }
 
                 m.Num = node.SelectSingleNode("./div[@class='uid']")?.InnerText.Trim();
-                if (string.IsNullOrEmpty(m.Num)) 
+                if (string.IsNullOrEmpty(m.Num))
                     m.Num = node.SelectSingleNode("./div[@class='uid2']")?.InnerText.Trim();
+                //add by joseph zy hu
+                if (string.IsNullOrEmpty(m.Num))
+                    m.Num = node.SelectSingleNode("./div[@class='video-title']/strong")?.InnerText.Trim();
+                //end add by joseph zy hu
                 m.Title = node.SelectSingleNode("./div[@class='video-title']")?.InnerText.Trim();
-                if (string.IsNullOrEmpty(m.Title)) 
+                if (string.IsNullOrEmpty(m.Title))
                     m.Title = node.SelectSingleNode("./div[@class='video-title2']")?.InnerText.Trim();
+                //add by joseph zy hu
+                if (string.IsNullOrEmpty(m.Title))
+                    m.Title = node.GetAttributeValue("title", null);
+                //end add by joseph zy hu
                 m.Date = node.SelectSingleNode("./div[@class='meta']")?.InnerText.Trim();
 
                 if (string.IsNullOrWhiteSpace(m.Num) == false && m.Title?.StartsWith(m.Num, StringComparison.OrdinalIgnoreCase) == true)
@@ -162,7 +174,14 @@ namespace Emby.Plugins.JavScraper.Scrapers
                 {
                     var ac = n.SelectNodes("./*[@class='value']/a");
                     if (ac?.Any() == true)
-                        v = string.Join(",", ac.Select(o => o.InnerText?.Trim()));
+                    {
+                        v = string.Join(",", ac.Where(t => t.NextSibling != null && t.NextSibling.Name == "strong" && t.NextSibling.GetClasses().Contains("female")).Select(t => t.InnerText?.Trim()));
+                        if (string.IsNullOrEmpty(v))
+                        {
+                            v = string.Join(",", ac.Select(o => o.InnerText?.Trim()));
+                        }
+                    }
+                       
                 }
 
                 if (v == null)
@@ -181,7 +200,7 @@ namespace Emby.Plugins.JavScraper.Scrapers
                 var img = coverNode?.GetAttributeValue("data-original", null);
                 if (string.IsNullOrEmpty(img))
                     img = coverNode?.GetAttributeValue("data-src", null);
-                if (string.IsNullOrEmpty(img)) 
+                if (string.IsNullOrEmpty(img))
                     img = coverNode?.GetAttributeValue("src", null);
 
                 if (string.IsNullOrWhiteSpace(img) == false)
@@ -245,7 +264,7 @@ namespace Emby.Plugins.JavScraper.Scrapers
             {
                 Provider = Name,
                 Url = url,
-                Title = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'title')]/strong")?.InnerText?.Trim(),
+                Title = doc.DocumentNode.SelectSingleNode("//strong[@class='current-title']")?.InnerHtml?.Trim() ?? "",
                 Cover = GetCover(),
                 Num = GetValue("番號"),
                 Date = GetValue("日期"),
@@ -254,17 +273,18 @@ namespace Emby.Plugins.JavScraper.Scrapers
                 Studio = GetValue("片商"),
                 Set = GetValue("系列"),
                 Director = GetValue("導演"),
-                Genres = GetGenres(),
+                Genres = GetGenres().Concat(GetActors()).ToList(),
                 Actors = GetActors(),
                 Samples = GetSamples(),
                 CommunityRating = GetCommunityRating(),
+                OriginalTitle = doc.DocumentNode.SelectSingleNode("//strong[@class='current-title']")?.InnerHtml?.Trim() ?? "",
             };
 
             m.Plot = await GetDmmPlot(m.Num);
             ////去除标题中的番号
             if (string.IsNullOrWhiteSpace(m.Num) == false && m.Title?.StartsWith(m.Num, StringComparison.OrdinalIgnoreCase) == true)
                 m.Title = m.Title.Substring(m.Num.Length).Trim();
-
+            base.log.Info($"ParseVideoInfo: {m.Num}-{m.Title}\t{Name}");
             return m;
         }
     }
