@@ -1,5 +1,5 @@
 # Emby.Plugins.JavScraper
-Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取影片信息。
+Emby/Jellyfin 的一个艺术作品刮削器插件，可以从某些网站抓取影片信息。
 
 [https://javscraper.com](https://javscraper.com)
 
@@ -16,7 +16,7 @@ Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取
   * [插件更新](#插件更新)
   * [配置](#配置)
   * [使用](#使用)
-  * [女优头像](#女优头像)
+  * [艺术家头像](#艺术家头像)
   * [特别建议](#特别建议)
 - [计划新增特性](#计划新增特性)
 - [反馈](#反馈)
@@ -28,7 +28,7 @@ Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取
   * [配置](#配置)
     + [Jav Scraper 配置](#jav-scraper-配置)
     + [媒体库配置](#媒体库配置)
-    + [女优头像采集](#女优头像采集)
+    + [艺术家头像采集](#艺术家头像采集)
 
 # 主要原理
 - 通过在 [CloudFlare Worker](https://workers.cloudflare.com) 上架设的**修改版 [jsproxy](https://github.com/EtherDream/jsproxy)** 作为代理，用于访问几个网站下载元数据和图片。
@@ -83,11 +83,11 @@ Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取
 - _如果需要更新全部元数据_：在**媒体库**中点 **刷新元数据** 
 - _如果需要更新某影片元数据_：在**影片**中点 **识别** ，并输入番号查找。
 
-## 女优头像
+## 艺术家头像
 
-~~参见 [Emby 女优头像批量导入工具](Emby.Actress/README.md)。~~
+~~参见 [Emby 艺术家头像批量导入工具](Emby.Actress/README.md)。~~
 
-已经集成头像采集，可以在 **控制台-高级-计划任务** 中找到 **JavScraper: 采集缺失的女优头像**，并点击右边的三角符号开始启动采集任务。
+已经集成头像采集，可以在 **控制台-高级-计划任务** 中找到 **JavScraper: 采集缺失的艺术家头像**，并点击右边的三角符号开始启动采集任务。
 
 头像数据源来自 [女友头像仓库](https://github.com/xinxin8816/gfriends)
 
@@ -105,7 +105,7 @@ Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取
 - [x] 翻译影片标题、标签、简介
 - [x] 刮削器支持排序
 - [x] 支持HTTP/HTTPS/SOCKS5代理
-- [x] 采集女优头像
+- [x] 采集艺术家头像
 - [x] 刮削器支持重新指定网站的域名
 - [ ] 文件整理
 
@@ -135,5 +135,5 @@ Emby/Jellyfin 的一个日本电影刮削器插件，可以从某些网站抓取
 ![Library Edit](https://javscraper.com/Emby.Plugins/Screenshots/LibraryEdit01.png)
 ![Library Edit](https://javscraper.com/Emby.Plugins/Screenshots/LibraryEdit02.png)
 
-### 女优头像采集
+### 艺术家头像采集
 ![Actress](https://javscraper.com/Emby.Plugins/Screenshots/Actress01.png)
