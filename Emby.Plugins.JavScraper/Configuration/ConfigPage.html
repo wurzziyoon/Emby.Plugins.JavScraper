@@ -27,7 +27,7 @@
                 <form class="JavScraperConfigurationForm">
 
                     <div class="infoBanner">
-                        <p class="description1" id="update" name="update">
+                        <!--<p class="description1" id="update" name="update">
                             <a is="emby-linkbutton" target="_blank" href="https://github.com/JavScraper/Emby.Plugins.JavScraper/releases/latest" class="button-link emby-button">正在检查新版本...</a>
                         </p>
                         <p class="description1" id="update0" name="update0" style="display: none;">
@@ -44,7 +44,7 @@
                         </p>
                         <p class="description1" id="update3" name="update3" style="display: none;">
                             已经是最新版本了，<a is="emby-linkbutton" target="_blank" href="https://github.com/JavScraper/Emby.Plugins.JavScraper/releases/latest" class="button-link emby-button">版本说明</a>。
-                        </p>
+                        </p>-->
                     </div>
 
                     <div is="emby-collapse" title="代理服务器">
@@ -422,23 +422,23 @@
             $('.JavScraperConfigurationPage').on('pageshow', function (event) {
                 Dashboard.showLoadingMsg();
                 var page = this;
-                ApiClient.getJSON('/emby/Plugins/JavScraper/Update').then(function (data) {
-                    console.log(data);
-                    var state = data.State;
-                    $('#update', page).attr("style", "display:none;");
-                    if (state == 0) {
-                        $('#update0', page).attr("style", "");
-                        $('#update_error', page).text(data.ErrorMessage);
-                    } else if (state == 1) {
-                        $('#update1', page).attr("style", "");
-                        $('#latest_version', page).text('v' + data.LatestVersion);
-                        $('#latest_message', page).html(data.UpdateMessage.replace(/\r\n/g, "<br />").replace(/\n/g, "<br />"));
-                    } else if (state == 2) {
-                        $('#update2', page).attr("style", "");
-                    } else {
-                        $('#update3', page).attr("style", "");
-                    }
-                });
+                //ApiClient.getJSON('/emby/Plugins/JavScraper/Update').then(function (data) {
+                //    console.log(data);
+                //    var state = data.State;
+                //    $('#update', page).attr("style", "display:none;");
+                //    if (state == 0) {
+                //        $('#update0', page).attr("style", "");
+                //        $('#update_error', page).text(data.ErrorMessage);
+                //    } else if (state == 1) {
+                //        $('#update1', page).attr("style", "");
+                //        $('#latest_version', page).text('v' + data.LatestVersion);
+                //        $('#latest_message', page).html(data.UpdateMessage.replace(/\r\n/g, "<br />").replace(/\n/g, "<br />"));
+                //    } else if (state == 2) {
+                //        $('#update2', page).attr("style", "");
+                //    } else {
+                //        $('#update3', page).attr("style", "");
+                //    }
+                //});
                 ApiClient.getPluginConfiguration(JavScraperConfigurationPage.pluginUniqueId).then(function (config) {
                     $('#current_version', page).text("v" + config.Version);
 
@@ -509,6 +509,7 @@
             $('.JavScraperConfigurationForm').on('submit', function (e) {
                 Dashboard.showLoadingMsg();
                 var form = this;
+
                 ApiClient.getPluginConfiguration(JavScraperConfigurationPage.pluginUniqueId).then(function (config) {
                     //config.EnableJsProxy = $('#chkEnableJsProxy').prop('checked');
                     config.ProxyType = $('#selectProxyType', form).val();

@@ -7,6 +7,7 @@ Emby/Jellyfin 的一个艺术作品刮削器插件，可以从某些网站抓取
 
 关键字：**_Jav_**, **_Scraper_**, **_Jav Scraper_**, **_Emby Plugins_**, **_Jellyfin Plugins_**, **_JavBus_**, **_JavDB_**, **_FC2_**, **_Japanese_**, **_Adult_**, **_Movie_**, **_Metadata_**, **_刮削器_**, **_插件_**, **_日本_**, **_电影_**, **_元数据_**, **_番号_**
 
+#Emby版本請不要使用4.8+!!
 # 目录
 - [主要原理](#主要原理)
 - [支持的采集来源](#支持的采集来源)

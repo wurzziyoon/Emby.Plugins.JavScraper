@@ -201,7 +201,7 @@ namespace Emby.Plugins.JavScraper
                 {
                     var name = node.InnerText?.Trim();
                     var p = node.ParentNode.ParentNode;
-                    var img = p.SelectSingleNode(".//img")?.GetAttributeValue("href", string.Empty);
+                    var img = p.SelectSingleNode(".//img")?.GetAttributeValue("src", string.Empty);
                     var result = new RemoteSearchResult
                     {
                         Name = name,
