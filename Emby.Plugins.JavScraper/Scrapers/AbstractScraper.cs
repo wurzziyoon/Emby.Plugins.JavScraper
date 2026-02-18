@@ -264,8 +264,9 @@ namespace Emby.Plugins.JavScraper.Scrapers
         {
             try
             {
+                log.Info("start GetStringAsync" + requestUri);
                 var html = await client.GetStringAsync(requestUri);
-                
+                log.Info(html);
                 if (string.IsNullOrWhiteSpace(html) == false)
                 {
                     var doc = new HtmlDocument();

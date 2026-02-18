@@ -61,6 +61,7 @@ namespace Emby.Plugins.JavScraper.Scrapers
         protected override async Task<List<JavVideoIndex>> DoQyery(List<JavVideoIndex> ls, string key)
         {
             ///https://javdb.com/search?q=ADN-106&f=all
+            log.Info("start DoQyery " + $"/search?q={key}&f=all");
             var doc = await GetHtmlDocumentAsync($"/search?q={key}&f=all");
             if (doc != null)
                 ParseIndex(ls, doc);
